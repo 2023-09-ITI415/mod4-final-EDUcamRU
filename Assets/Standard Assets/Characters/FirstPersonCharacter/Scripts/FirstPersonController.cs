@@ -82,7 +82,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
-
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Pickup"))
+            {
+                other.gameObject.SetActive(false);
+            }
+        }
 
         private void PlayLandingSound()
         {
