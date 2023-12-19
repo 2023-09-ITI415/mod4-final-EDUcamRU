@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+using TMPro;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
@@ -42,6 +43,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+
+        //Scoring
+        private int count;
+        public TMP_Text countText;
+        public TMP_Text winText;
         // Use this for initialization
         private void Start()
         {
@@ -55,6 +61,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+            count = 0;
+            SetCountText();
+            winText.gameObject.SetActive(false);
         }
 
 
@@ -82,13 +91,29 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
-        
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("Pickup"))
             {
                 other.gameObject.SetActive(false);
+                count++;
+                SetCountText();
             }
+            
+        }
+        
+        // Scoring
+        void SetCountText()
+        {
+            // Set count text to "[3 - amount of pickups collected] remain"
+            countText.text = "Pickups Remaining: " + (3 - count).ToString();
+            // If all pickups are collected, display "All Pickups Collected" text
+            if (count >= 3)
+            {
+                winText.gameObject.SetActive(true);
+            }
+
         }
 
         private void PlayLandingSound()
